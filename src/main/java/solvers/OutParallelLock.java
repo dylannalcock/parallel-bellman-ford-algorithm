@@ -36,13 +36,12 @@ public class OutParallelLock implements BellmanFordSolver {
 
         // Iterate n - 1 times
         for (int n = 0; n < adjMatrix.length; n++) {
-            // Copy values from D to D2 in parallel using the ArrayCopyTask
-            int[] D2 = new int[D.length];
-            pool.invoke(new ArrayCopyTask(D, D2, 0, D.length));
 
             // Relax the edges for each vertex in parallel using the RelaxOutTaskBad
             for (int v = 0; v < adjMatrix.length; v++) {
-
+                // Copy values from D to D2 in parallel using the ArrayCopyTask
+                int[] D2 = new int[D.length];
+                pool.invoke(new ArrayCopyTask(D, D2, 0, D.length));
                 pool.invoke(new RelaxOutTaskLock(D, P, D2, adjList, v, lock));
             }
         }

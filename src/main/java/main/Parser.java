@@ -52,7 +52,7 @@ public class Parser {
      * @param adjMatrix Adjacency matrix
      * @return Adjacency list with incoming edges
      */
-    public static Object parseInverse(int[][] adjMatrix) {
+    public static ArrayList<HashMap<Integer,Integer>> parseInverse(int[][] adjMatrix) {
         // Initialize the adjacency list
         ArrayList<HashMap<Integer,Integer>> adjList = new ArrayList<>();
 
@@ -63,8 +63,8 @@ public class Parser {
             // Iterate over each neighbor
             for (int w = 0; w < adjMatrix[0].length; w++) {
                 // If there is an edge, add the neighbor and its distance to the adjacency list
-                if (adjMatrix[v][w] != Integer.MAX_VALUE) {
-                    neighbors.put(v, adjMatrix[v][w]);
+                if (adjMatrix[w][v] != Integer.MAX_VALUE) {
+                    neighbors.put(w, adjMatrix[w][v]);
                 }
             }
 
