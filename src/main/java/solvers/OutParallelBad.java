@@ -2,7 +2,10 @@ package solvers;
 
 import cse332.interfaces.BellmanFordSolver;
 import main.Parser;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
 import java.util.concurrent.ForkJoinPool;
 import cse332.graph.GraphUtil;
 import paralleltasks.ArrayCopyTask;
@@ -40,9 +43,6 @@ public class OutParallelBad implements BellmanFordSolver {
             }
         }
 
-
-        System.out.println(Arrays.toString(P));
-        System.out.println(GraphUtil.getCycle(P));
         return GraphUtil.getCycle(P);
     }
 

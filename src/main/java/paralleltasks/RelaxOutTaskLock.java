@@ -1,7 +1,8 @@
 package paralleltasks;
 
 import java.util.concurrent.RecursiveAction;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 

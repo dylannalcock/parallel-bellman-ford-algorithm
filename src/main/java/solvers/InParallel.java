@@ -4,10 +4,9 @@ import cse332.graph.GraphUtil;
 import cse332.interfaces.BellmanFordSolver;
 import main.Parser;
 import paralleltasks.ArrayCopyTask;
-import paralleltasks.RelaxOutTaskBad;
+import paralleltasks.RelaxInTask;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -40,13 +39,10 @@ public class InParallel implements BellmanFordSolver {
             // Relax the edges for each vertex in parallel using the RelaxOutTaskBad
             for (int w = 0; w < adjMatrix.length; w++) {
 
-                pool.invoke(new RelaxOutTaskBad(D, P, D2, adjList, w));
+                pool.invoke(new RelaxInTask(D, P, D2, adjList, w));
             }
         }
 
-
-        System.out.println(Arrays.toString(P));
-        System.out.println(GraphUtil.getCycle(P));
         return GraphUtil.getCycle(P);
     }
 

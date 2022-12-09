@@ -3,7 +3,8 @@ package solvers;
 import cse332.graph.GraphUtil;
 import cse332.interfaces.BellmanFordSolver;
 import main.Parser;
-import java.util.*;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 import java.util.List;
 
@@ -11,7 +12,6 @@ public class OutSequential implements BellmanFordSolver {
 
     public List<Integer> solve(int[][] adjMatrix, int source) {
 
-        System.out.println(Arrays.deepToString(adjMatrix));
         ArrayList<HashMap<Integer, Integer>> adjList = Parser.parse(adjMatrix);
         int[] D = new int[adjMatrix.length];
         int[] P = new int[adjMatrix.length];
@@ -46,8 +46,7 @@ public class OutSequential implements BellmanFordSolver {
                 }
             }
         }
-        System.out.println(Arrays.toString(P));
-        System.out.println(GraphUtil.getCycle(P));
+
         return GraphUtil.getCycle(P);
     }
 }

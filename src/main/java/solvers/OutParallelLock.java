@@ -3,11 +3,10 @@ package solvers;
 import cse332.graph.GraphUtil;
 import cse332.interfaces.BellmanFordSolver;
 import main.Parser;
-import paralleltasks.ArrayCopyTask;;
+import paralleltasks.ArrayCopyTask;
 import paralleltasks.RelaxOutTaskLock;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -48,8 +47,6 @@ public class OutParallelLock implements BellmanFordSolver {
             }
         }
 
-        System.out.println(Arrays.toString(P));
-        System.out.println(GraphUtil.getCycle(P));
         return GraphUtil.getCycle(P);
     }
 
