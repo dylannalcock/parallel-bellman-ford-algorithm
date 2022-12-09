@@ -1,8 +1,5 @@
 package paralleltasks;
 
-import cse332.exceptions.NotYetImplementedException;
-
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -14,7 +11,7 @@ public class RelaxOutTaskLock extends RecursiveAction {
     private final int[] D2;
     private final List<HashMap<Integer, Integer>> adjList;
     private final int v;
-    private final Lock lock;
+    private final ReentrantLock lock;
 
     public RelaxOutTaskLock(int[] D, int[] P, int[] D2, List<HashMap<Integer, Integer>> adjList, int v, Lock lock) {
         this.D = D;
@@ -22,7 +19,7 @@ public class RelaxOutTaskLock extends RecursiveAction {
         this.D2 = D2;
         this.adjList = adjList;
         this.v = v;
-        this.lock = lock;
+        this.lock = (ReentrantLock) lock;
     }
 
     @Override
