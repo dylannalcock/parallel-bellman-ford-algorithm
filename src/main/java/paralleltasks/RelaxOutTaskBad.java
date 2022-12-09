@@ -4,26 +4,42 @@ import cse332.exceptions.NotYetImplementedException;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
+import java.util.*;
 
 public class RelaxOutTaskBad extends RecursiveAction {
 
-    public static final ForkJoinPool pool = new ForkJoinPool();
-    public static final int CUTOFF = 1;
+    // Array of distances from the source to each vertex
+    private final int[] D;
+    // Array of predecessor nodes in the shortest path from the source
+    private final int[] P;
+    // Array of adjacency lists for each vertex
 
-    public RelaxOutTaskBad() {
-        throw new NotYetImplementedException();
+    private final int[] D2;
+    private final ArrayList<HashMap<Integer, Integer>> adjList;
+    // The vertex to relax the outgoing edges for
+    private final int v;
+
+    public RelaxOutTaskBad(int[] D, int[] P, int[] D2, ArrayList<HashMap<Integer, Integer>> adjList, int v) {
+        this.D = D;
+        this.P = P;
+        this.D2 = D2;
+        this.adjList = adjList;
+        this.v = v;
     }
 
+    @Override
     protected void compute() {
-        throw new NotYetImplementedException();
-    }
+        // Get the neighbors of the current vertex
+        HashMap<Integer, Integer> neighbors = adjList.get(v);
 
-    public static void sequential() {
-        throw new NotYetImplementedException();
-    }
+        // Relax the edges for each neighbor of the current vertex
+        for (int w : neighbors.keySet()) {
 
-    public static void parallel() {
-        throw new NotYetImplementedException();
+            int edgeCost = neighbors.get(w);
+            if (D[v] < Integer.MAX_VALUE && D[w] > D[v] + edgeCost) {
+                D[w] = D2[v] + edgeCost;
+                P[w] = v;
+            }
+        }
     }
-
 }

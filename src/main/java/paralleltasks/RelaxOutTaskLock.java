@@ -4,25 +4,42 @@ import cse332.exceptions.NotYetImplementedException;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
+import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class RelaxOutTaskLock extends RecursiveAction {
+    private final int[] D;
+    private final int[] P;
+    private final int[] D2;
+    private final List<HashMap<Integer, Integer>> adjList;
+    private final int v;
+    private final Lock lock;
 
-    public static final ForkJoinPool pool = new ForkJoinPool();
-    public static final int CUTOFF = 1;
-
-    public RelaxOutTaskLock() {
-        throw new NotYetImplementedException();
+    public RelaxOutTaskLock(int[] D, int[] P, int[] D2, List<HashMap<Integer, Integer>> adjList, int v, Lock lock) {
+        this.D = D;
+        this.P = P;
+        this.D2 = D2;
+        this.adjList = adjList;
+        this.v = v;
+        this.lock = lock;
     }
 
-    protected void compute() {
-        throw new NotYetImplementedException();
-    }
-
-    public static void sequential() {
-        throw new NotYetImplementedException();
-    }
-
-    public static void parallel() {
-        throw new NotYetImplementedException();
+    @Override
+    public void compute() {
+        lock.lock();
+        try {
+            // Relax the edges outgoing from vertex v
+            HashMap<Integer, Integer> neighbors = adjList.get(v);
+            for (int w : neighbors.keySet()) {
+                int edgeCost = neighbors.get(w);
+                if (D[v] < Integer.MAX_VALUE && D[w] > D[v] + edgeCost) {
+                    D[w] = D2[v] + edgeCost;
+                    P[w] = v;
+                }
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 }
