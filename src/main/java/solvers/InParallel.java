@@ -7,7 +7,6 @@ import paralleltasks.ArrayCopyTask;
 import paralleltasks.RelaxInTask;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -16,8 +15,6 @@ public class InParallel implements BellmanFordSolver {
 
     public List<Integer> solve(int[][] adjMatrix, int source) {
         ArrayList<HashMap<Integer, Integer>> adjList = Parser.parseInverse(adjMatrix);
-        System.out.println(Arrays.deepToString(adjMatrix));
-        System.out.println("inverse: " + adjList);
 
         int[] D = new int[adjMatrix.length]; // shortest distances from source to each node
         int[] P = new int[adjMatrix.length]; // predecessors for each node in the shortest path
@@ -42,15 +39,10 @@ public class InParallel implements BellmanFordSolver {
                 // Copy values from D to D2 in parallel using the ArrayCopyTask
                 int[] D2 = new int[D.length];
                 pool.invoke(new ArrayCopyTask(D, D2, 0, D.length));
-                System.out.println("v in para: " + v);
-                System.out.println("D before: " + Arrays.toString(D));
 
-                pool.invoke(new RelaxInTask(D, P, D2, adjList, adjMatrix, v));
+                pool.invoke(new RelaxInTask(D, P, D2, adjList, v));
             }
         }
-
-        System.out.println(Arrays.toString(P));
-        System.out.println(GraphUtil.getCycle(P));
         return GraphUtil.getCycle(P);
     }
 
