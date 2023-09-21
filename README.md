@@ -38,6 +38,56 @@ In this pseudocode:
 
 In this project, I successfully implemented various components, including `Parser`, `OutSequential`, `OutParallelBad`, `OutParallelLock`, `InParallel`, `ArrayCopyTask`, `RelaxOutTaskBad`, `RelaxOutTaskLock`, and `RelaxInTask`. These components played pivotal roles in introducing parallelism and optimizing the computation of the Bellman-Ford algorithm.
 
+## Part 1: Sequential
+
+### Parser Part 1
+Before diving into the Bellman-Ford algorithm, I recognized the importance of parsing the input graph, which is represented as an adjacency matrix, into an adjacency list format. This transformation was essential for running the algorithm efficiently. In this initial parser version, I focused on converting the adjacency matrix into an adjacency list of vertices reached through outgoing edges. 
+
+For this task, I chose to use an ArrayList of HashMaps, which allowed me to efficiently represent the adjacency list. Each element in the ArrayList represented a vertex, and the associated HashMap stored outgoing edges and their costs.
+
+**Implementation**: I implemented the `parse()` method in `main/Parser.java`.
+
+### Bellman-Ford Sequential
+In this first version of the Bellman-Ford algorithm, I concentrated on the sequential implementation. The algorithm's `solve()` method consisted of three main parts:
+
+1. Parsing and Initialization: Parsing the adjacency matrix to create adjacency lists (using the method from Parser.java) and initializing essential data structures such as `dist` and `pred`. This part remained sequential in all versions.
+
+2. Running the Bellman-Ford Algorithm: This part involved two substeps: array copying and relaxing the edges. In this sequential version, both array copying and edge relaxing were done sequentially.
+
+3. Finding Negative-Cost Cycles: To detect negative-cost cycles, I used the `getCycle()` method in `GraphUtil.java`. This method returned the list of vertices contributing to a cycle with a negative cost sum, which I then returned from the `solve()` method.
+
+**Implementation**: I implemented this version in `solvers/OutSequential.java`.
+
+## Part 2: Parallel with Outgoing Edges
+
+### Naive ForkJoin
+With a better understanding of the Bellman-Ford algorithm, I ventured into parallelizing it to improve performance. I leveraged the Java ForkJoin framework to parallelize both the array copying and edge relaxing parts of the algorithm.
+
+In this version, I focused on parallelizing the edge relaxing step, specifically, the iteration through outgoing edges. The goal was to parallelize the outer loop for each vertex while keeping the inner loop for outgoing edges sequential. It's important to note that due to the nature of this parallelization, the results might be incorrect or correct, which was expected.
+
+**Implementation**: I implemented this version in `solvers/OutParallelBad.java` and created two ForkJoin tasks: `ArrayCopyTask.java` and `RelaxOutTaskBad.java` in the `paralleltasks` folder.
+
+### ForkJoin with Locks
+Recognizing the incorrect results from the naive parallel version, I took steps to address this issue by using locks. The solution was to manage locks to prevent race conditions during the parallel execution. 
+
+In this version, I continued working with outgoing edges and implemented a locking mechanism. I used Java's ReentrantLocks to manage concurrency and avoid race conditions, ensuring that parallel execution produced correct results.
+
+**Implementation**: I implemented this version in `solvers/OutParallelLock.java` and created a corresponding ForkJoin task: `paralleltasks/RelaxOutTaskLock.java`. I was able to reuse the `ArrayCopyTask` from the previous version because the array copying process remained the same.
+
+## Part 3: Parallel with Incoming Edges & Short Questions
+
+### Parser Part 2
+In preparation for the next Bellman-Ford implementation, I recognized the need to convert the input graph to adjacency lists but this time keeping track of incoming edges. This transformation was crucial for running the algorithm with incoming edges efficiently.
+
+**Implementation**: I implemented the `parseInverse()` method in `main/Parser.java`.
+
+### Another ForkJoin
+To address the issues from the naive parallel version, I explored an alternative approach by working with incoming edges instead of outgoing ones. By now, I had a method to create adjacency lists for incoming edges, which I used in this version.
+
+In this version, I continued to use the ForkJoin framework but eliminated the use of locks. Instead, I focused on changing how I relaxed the edges, allowing for efficient parallel execution.
+
+**Implementation**: I implemented this version in `solvers/InParallel.java` and created another ForkJoin task: `paralleltasks/RelaxInTask`. I reused the `ArrayCopyTask` from a previous version, as the array copying process remained the same.
+
 ## Project Restrictions
 
 To challenge myself and hone my skills, I adhered to specific project restrictions:
@@ -62,6 +112,6 @@ For testing and validation, I experimented with various graph generation setting
 
 ## Conclusion
 
-This project has been an exciting journey in exploring the Parallel Bellman-Ford algorithm and the ForkJoin framework. By successfully implementing and optimizing this algorithm, I've not only gained valuable experience in parallel computing but also developed a well-structured codebase that adheres to industry standards.
+This project has been an invaluable learning experience, allowing me to explore the intricacies of parallel computing, algorithm optimization, and concurrency management. My implementations progressively evolved from a sequential approach to parallel versions, addressing issues and achieving better performance along the way.
 
-This README showcases my commitment to writing clean and concise documentation, which is essential for effective communication in software development. I believe this project demonstrates my technical skills and my ability to tackle complex problems. I look forward to discussing this project in more detail during any potential interviews and showcasing the depth of my knowledge and experience in parallel computing and algorithm optimization.
+These implementations not only demonstrate my technical skills but also showcase my ability to analyze and optimize algorithms while adhering to industry-standard practices. I look forward to discussing this project in more detail during interviews, where I can elaborate on the challenges faced, the solutions implemented, and the lessons learned in the process.
